@@ -1,0 +1,46 @@
+version: '3'
+services: 
+  dbservice:
+    image: postgres
+    environment: 
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      
+    volumes:
+      - ./data:/var/lib/postgres
+
+    ports:
+      - 5432:5432
+    networks:
+      - bootapp
+  
+  
+  transaction:
+    build: ./Transaction
+    depends_on:
+      - dbservice
+      - bms
+    environment:
+      - spring.datasource.url=jdbc:postgresql://dbservice:5432/postgres?createDatabaseIfNotExist=true
+      - spring.datasource.username=postgres
+      - spring.datasource.password=root
+    ports:
+      - 9090:9090
+    networks:
+      - bootapp
+    
+  bms:
+    build: ./BMS
+    depends_on:
+      - dbservice
+    environment:
+      - spring.datasource.url=jdbc:postgresql://dbservice:5432/postgres?createDatabaseIfNotExist=true
+      - spring.datasource.username=postgres
+      - spring.datasource.password=root
+    ports:
+      - 8080:8080
+    networks:
+      - bootapp
+
+networks:
+  bootapp:
