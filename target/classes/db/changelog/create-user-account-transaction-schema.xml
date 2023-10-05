@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="Revan">
+        <createTable tableName="user_info">
+            <column name="user_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_of_birth" type="date" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="gender" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mobile_number" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email_address" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Revan">
+        <createTable tableName="account">
+            <column name="account_number" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_type" type="varchar(255)"/>
+            <column name="balance" type="double"/>
+            <column name="user_id" type="int"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="Revan">
+        <addForeignKeyConstraint baseTableName="account"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_account_user_id"
+                                 referencedTableName="user_info"
+                                 referencedColumnNames="user_id"/>
+    </changeSet>
+
+    <changeSet id="4" author="Revan">
+        <createTable tableName="transaction">
+            <column name="transaction_id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_number" type="int"/>
+            <column name="transaction_type" type="varchar(255)"/>
+            <column name="amount" type="double"/>
+            <column name="transaction_date" type="date"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="5" author="Revan">
+        <addForeignKeyConstraint baseTableName="transaction"
+                                 baseColumnNames="account_number"
+                                 constraintName="fk_transaction_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="account_number"/>
+    </changeSet>
+
+</databaseChangeLog>
